@@ -22,8 +22,8 @@ const submitForm = async (req, res) => {
 
     // Save PDF file to disk
     let pdfPath;
-    if (req.file) {
-      pdfPath = `uploads/${req.file.filename}`;
+    if (req.file ) {
+      pdfPath = `uploads/${req.body.id}`;
       await fs.rename(req.file.path, pdfPath);
       console.log(pdfPath);
     }
