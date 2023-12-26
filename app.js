@@ -11,13 +11,13 @@ const port = 3000;
 
 // SQLite database setup
 const db = new sqlite3.Database('user_details.db');
-db.run('CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, email TEXT)');
+db.run('CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT,empid INTEGER, name TEXT, email TEXT)');
 
 // Multer setup for file upload
 const storage = multer.diskStorage({
     destination: 'uploads/',
     filename: function (req, file, cb) {
-        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+        cb(null, req.body.id + path.extname(file.originalname));
     }
 });
 const upload = multer({ storage: storage, limits: { fileSize: 10 * 1024 * 1024 } });
@@ -38,15 +38,16 @@ app.get('/', (req, res) => {
 
 app.post('/submit', upload.single('pdf'), (req, res) => {
     // Validate user input
-    const { name, email } = req.body;
+    const { id,name, email } = req.body;
     if (!name || !email) {
-        return res.status(400).send('Name and Email are required');
+        return res.status(400).send('id,Name and Email are required');
     }
 
     let pdfPath;
     // Save form details to SQLite database
-    db.run('INSERT INTO users (name, email) VALUES (?, ?)', [name, email], function (err) {
+    db.run('INSERT INTO users (empid,name, email) VALUES (?,?, ?)', [id,name, email], function (err) {
         if (err) {
+           console.error(err);
             return res.status(500).send('Error saving to database');
         }
 
@@ -77,23 +78,27 @@ app.post('/submit', upload.single('pdf'), (req, res) => {
             text: `Thank you for submitting the form, ${name}!`,
             html:
                 `<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-                <h2 style="color: #333; text-align: center;">Thank you for submitting the form, ${name}!</h2>
-                <table style="width: 100%; border-collapse: collapse; margin-top: 20px; border: 1px solid #ddd;">
-                  <tr style="background-color: #4caf50; color: #fff; text-align: left;">
-                    <th style="padding: 10px; border: 1px solid #ddd;">Field</th>
-                    <th style="padding: 10px; border: 1px solid #ddd;">Value</th>
-                  </tr>
-                  <tr>
-                    <td style="padding: 10px; border: 1px solid #ddd;"><strong>Name</strong></td>
-                    <td style="padding: 10px; border: 1px solid #ddd;">${name}</td>
-                  </tr>
-                  <tr>
-                    <td style="padding: 10px; border: 1px solid #ddd;"><strong>Email</strong></td>
-                    <td style="padding: 10px; border: 1px solid #ddd;">${email}</td>
-                  </tr>
-                </table>
-                <p style="text-align: center; margin-top: 20px; font-size: 16px; color: #555;">Attached is the PDF file containing additional details.</p>
-              </div>
+      <h2 style="color: #333; text-align: center;">Thank you for submitting the form, ${name}!</h2>
+      <table style="width: 100%; border-collapse: collapse; margin-top: 20px; border: 1px solid #ddd;">
+        <tr style="background-color: #4caf50; color: #fff; text-align: left;">
+          <th style="padding: 10px; border: 1px solid #ddd;">Field</th>
+          <th style="padding: 10px; border: 1px solid #ddd;">Value</th>
+        </tr>
+        <tr>
+          <td style="padding: 10px; border: 1px solid #ddd;"><strong>ID</strong></td>
+          <td style="padding: 10px; border: 1px solid #ddd;">${id}</td>
+        </tr>
+        <tr>
+          <td style="padding: 10px; border: 1px solid #ddd;"><strong>Name</strong></td>
+          <td style="padding: 10px; border: 1px solid #ddd;">${name}</td>
+        </tr>
+        <tr>
+          <td style="padding: 10px; border: 1px solid #ddd;"><strong>Email</strong></td>
+          <td style="padding: 10px; border: 1px solid #ddd;">${email}</td>
+        </tr>
+      </table>
+      <p style="text-align: center; margin-top: 20px; font-size: 16px; color: #555;">Attached is the PDF file containing additional details.</p>
+    </div>
             
             `,
             attachments: req.file
