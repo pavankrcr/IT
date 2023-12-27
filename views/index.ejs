@@ -1,27 +1,75 @@
+<!-- views/index.ejs -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="/styles.css">
-  <title>User Details Form</title>
+  <title>User Form</title>
 </head>
 <body>
-  <h1>User Details Form</h1>
-  <form action="/submit" method="post" enctype="multipart/form-data">
-    <label for="id">Emp Id:</label>
-    <input type="text" id="id" name="id" required>
-    <br>
-    <label for="name">Name:</label>
-    <input type="text" id="name" name="name" required>
-    <br>
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="email" required>
-    <br>
-    <label for="pdf">PDF File (not exceeding 10MB):</label>
-    <input type="file" id="pdf" name="pdf" accept=".pdf" required>
-    <br>
-    <button type="submit">Submit</button>
-  </form>
+  <div class="container">
+    <h1>User Form</h1>
+    <form action="/submit" method="post" enctype="multipart/form-data">
+      <!-- Existing fields -->
+      <label for="id">ID</label>
+      <input type="text" name="id" required>
+
+      <label for="name">Name</label>
+      <input type="text" name="name" required>
+
+      <label for="email">Email</label>
+      <input type="email" name="email" required>
+
+      <!-- New fields -->
+      <label for="houseRent">House Rent Paid (Yearly)</label>
+      <input type="number" name="houseRent" required>
+
+      <label for="panNumber">PAN Number of Owner (Must if rent paid is in excess of 100,000)</label>
+      <input type="text" name="panNumber" required>
+
+      <label for="homeLoanInterest">Home Loan Interest</label>
+      <input type="number" name="homeLoanInterest" required>
+
+      <label for="homeLoanPrincipal">Home Loan Principal</label>
+      <input type="number" name="homeLoanPrincipal" required>
+
+      <label for="deduction80C">LIC, Mutual Fund, EPF, PPF, etc. deduction under 80C</label>
+      <input type="number" name="deduction80C" required>
+
+      <label for="nps">National Pension Scheme under section 80CCCD</label>
+      <input type="number" name="nps" required>
+
+      <label for="medicalInsuranceSelf">Medical Insurance premium - Self</label>
+      <input type="number" name="medicalInsuranceSelf" required>
+
+      <label for="medicalInsuranceParentsLess60">Medical Insurance premium - Self dependent parents age less than 60</label>
+      <input type="number" name="medicalInsuranceParentsLess60" required>
+
+      <label for="medicalInsuranceParentsGreater60">Medical Insurance premium - Self dependent parents age greater than 60</label>
+      <input type="number" name="medicalInsuranceParentsGreater60" required>
+
+      <label for="deduction80DDBLess60">Deduction under 80DDB (Medical expenses) Patient age less than 60</label>
+      <input type="number" name="deduction80DDBLess60" required>
+
+      <label for="deduction80DDBMore60">Deduction under 80DDB (Medical expenses) Patient age more than 60</label>
+      <input type="number" name="deduction80DDBMore60" required>
+
+      <label for="deduction80UPartial">Deduction under 80U (Differently abled person dependent) - Partial up to 40%</label>
+      <input type="number" name="deduction80UPartial" required>
+
+      <label for="deduction80UMore40">Deduction under 80U (Differently abled person dependent) - More than 40%</label>
+      <input type="number" name="deduction80UMore40" required>
+
+      <label for="deductionInterestEducationLoan">Deduction of Interest paid on Education loan</label>
+      <input type="number" name="deductionInterestEducationLoan" required>
+
+      <label for="pdf">Upload PDF File (not exceeding 10MB)</label>
+      <input type="file" name="pdf" required>
+
+      <button type="submit">Submit</button>
+    </form>
+  </div>
 </body>
 </html>

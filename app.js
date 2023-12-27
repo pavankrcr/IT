@@ -1,9 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const formRoutes = require('./routes/formRoutes');
+const formRoutes = require('./routes/formRoutes.js');
 const path = require('path');
 const ejs = require('ejs');
-const { port } = require('./config/config');
+const { port } = require('./config/config.js');
 
 const app = express();
 

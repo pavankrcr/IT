@@ -5,30 +5,57 @@ const { emailConfig } = require('../config/config');
 
 const submitForm = async (req, res) => {
   try {
-    // Validate user input
-    const { id, name, email } = req.body;
+    const {
+      id,
+      name,
+      email,
+      houseRent,
+      panNumber,
+      homeLoanInterest,
+      homeLoanPrincipal,
+      deduction80C,
+      nps,
+      medicalInsuranceSelf,
+      medicalInsuranceParentsLess60,
+      medicalInsuranceParentsGreater60,
+      deduction80DDBLess60,
+      deduction80DDBMore60,
+      deduction80UPartial,
+      deduction80UMore40,
+      deductionInterestEducationLoan,
+    } = req.body;
+
     if (!id || !name || !email) {
       return res.status(400).send('ID, Name, and Email are required');
     }
 
-    // Save form details to MySQL database
-    userModel.saveUser(id, name, email, (error, results) => {
-      if (error) {
-        console.error('Error inserting user data into MySQL:', error);
-        throw new Error('Failed to insert user data');
-      }
-      console.log('User data inserted into MySQL:', results);
+    await userModel.saveUser({
+      empid: id,
+      name,
+      email,
+      houseRent,
+      panNumber,
+      homeLoanInterest,
+      homeLoanPrincipal,
+      deduction80C,
+      nps,
+      medicalInsuranceSelf,
+      medicalInsuranceParentsLess60,
+      medicalInsuranceParentsGreater60,
+      deduction80DDBLess60,
+      deduction80DDBMore60,
+      deduction80UPartial,
+      deduction80UMore40,
+      deductionInterestEducationLoan,
     });
 
-    // Save PDF file to disk
     let pdfPath;
     if (req.file) {
-      pdfPath = `uploads/${req.file.filename}`;
+      pdfPath = `uploads/${req.body.id}`;
       await fs.rename(req.file.path, pdfPath);
       console.log(pdfPath);
     }
 
-    // Send confirmation email
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: emailConfig,
@@ -40,9 +67,8 @@ const submitForm = async (req, res) => {
       subject: 'Form Submission Confirmation',
       text: `Thank you for submitting the form, ${name}!`,
       html: `<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-    <h2 style="color: #333; text-align: center;">Thank you for submitting the form, ${name}!</h2>
-    <!-- ... rest of the HTML ... -->
-    </div>`,
+        <!-- ... (rest of the HTML) ... -->
+      </div>`,
       attachments: req.file ? [{ filename: req.file.originalname, path: pdfPath }] : [],
     };
 
