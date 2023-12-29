@@ -1,7 +1,15 @@
 const { Pool } = require('pg');
 const { postgresConfig } = require('../config/config');
+const AWS = require('aws-sdk');
+require('dotenv').config();
 
 const pool = new Pool(postgresConfig);
+
+const s3 = new AWS.S3({
+  accessKeyId: process.env.AWS_ACCESS_KEY,
+  secretAccessKey: process.env.AWS_SECRET_KEY,
+  region: process.env.AWS_REGION, // e.g., 'us-east-1'
+});
 
 const createTableQuery = `
   CREATE TABLE IF NOT EXISTS users (
@@ -37,7 +45,7 @@ const initializeDatabase = async () => {
   }
 };
 
-const saveUser = async (userData) => {
+const saveUser = async (userData,pdfBuffer,callback) => {
   try {
     const {
       empid,
@@ -90,10 +98,33 @@ const saveUser = async (userData) => {
     await client.query(insertQuery, insertValues);
     console.log('User data inserted into PostgreSQL');
     client.release();
+  
+  
   } catch (error) {
     console.error('Error inserting user data into PostgreSQL:', error);
     throw new Error('Failed to insert user data');
   }
+  
+    // Save PDF to Amazon S3
+    const s3Params = {
+      Bucket: process.env.AWS_BUCKET_NAME,
+      Key: `uploads/${userData.empid}/${Date.now()}_document.pdf`,
+      Body: pdfBuffer,
+      ContentType: 'application/pdf',
+      
+    };
+
+    s3.upload(s3Params, (s3Err, s3Data) => {
+      if (s3Err) {
+        console.error('Error uploading PDF to S3:', s3Err);
+        if(callback)
+        callback(s3Err);
+      } else {
+        console.log('PDF uploaded to S3:');
+        if(callback)
+        callback(null, result);
+      }
+    });
 };
 
 module.exports = {
