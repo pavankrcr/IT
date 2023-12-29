@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "aws-sdk": "^2.1527.0",
     "better-sqlite3": "^9.2.2",
     "body-parser": "^1.20.2",
     "dotenv": "^16.3.1",
