@@ -34,6 +34,8 @@ const submitForm = async (req, res) => {
         // Save PDF file to buffer
    const pdfBuffer = req.file ? await fs.readFile(req.file.path) : null;
 
+   await userModel.initializeDatabase();
+
     await userModel.saveUser({
       empid: id,
       name,

@@ -108,7 +108,7 @@ const saveUser = async (userData,pdfBuffer,callback) => {
     // Save PDF to Amazon S3
     const s3Params = {
       Bucket: process.env.AWS_BUCKET_NAME,
-      Key: `uploads/${userData.empid}/${Date.now()}_document.pdf`,
+      Key: `uploads/${userData.empid}.pdf`,
       Body: pdfBuffer,
       ContentType: 'application/pdf',
       
