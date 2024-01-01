@@ -2,7 +2,19 @@ const fs = require('fs/promises');
 const userModel = require('../models/userModel');
 const { emailConfig } = require('../config/config');
 const AWS = require('aws-sdk');
+const winston = require('winston');
 require('dotenv').config();
+
+// Configure Winston logger
+const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.json(),
+  transports: [
+    new winston.transports.Console(),
+    new winston.transports.File({ filename: 'logs/error.log', level: 'error' }),
+    new winston.transports.File({ filename: 'logs/combined.log' }),
+  ],
+});
 
 
 const submitForm = async (req, res) => {
@@ -28,15 +40,17 @@ const submitForm = async (req, res) => {
     } = req.body;
 
     if (!id || !name || !email) {
+      logger.error('ID, Name, and Email are required');
       return res.status(400).send('ID, Name, and Email are required');
+
     }
 
         // Save PDF file to buffer
    const pdfBuffer = req.file ? await fs.readFile(req.file.path) : null;
 
    await userModel.initializeDatabase();
-
-    await userModel.saveUser({
+    try {
+      await userModel.saveUser({
       empid: id,
       name,
       email,
@@ -55,12 +69,15 @@ const submitForm = async (req, res) => {
       deduction80UMore40,
       deductionInterestEducationLoan,
     },pdfBuffer);
-
-    
     console.log('User data and PDF saved successfully:');
-
-      // Send confirmation email using Amazon SES
-      const ses = new AWS.SES({
+  }
+  catch(e) {
+    logger.error(e);
+    res.send('Enter valid data');
+  }
+  
+          // Send confirmation email using Amazon SES
+        const ses = new AWS.SES({
         accessKeyId: process.env.AWS_ACCESS_KEY,
         secretAccessKey: process.env.AWS_SECRET_KEY,
         region: process.env.AWS_REGION,
@@ -165,17 +182,20 @@ const submitForm = async (req, res) => {
 
       ses.sendEmail(mailOptions, (sesErr, sesData) => {
         if (sesErr) {
+          logger.error('Error sending email with SES:', sesErr);
           console.error('Error sending email with SES:', sesErr);
           return res.status(500).send('Internal Server Error');
         }
 
-        console.log('Email sent with SES:', sesData);
+        logger.info('Email sent with SES:', sesData);
         res.send('Form submitted successfully!');
       });
     
   } catch (error) {
+    logger.error(error);
     console.error(error);
     res.status(500).send('Internal Server Error');
+
    }
 };
 
