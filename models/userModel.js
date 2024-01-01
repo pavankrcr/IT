@@ -14,23 +14,23 @@ const s3 = new AWS.S3({
 const createTableQuery = `
   CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
-    empid INTEGER,
+    empid VARCHAR(6),
     name TEXT,
     email TEXT,
-    houseRent INTEGER,
-    panNumber TEXT,
-    homeLoanInterest INTEGER,
-    homeLoanPrincipal INTEGER,
-    deduction80C INTEGER,
-    nps INTEGER,
-    medicalInsuranceSelf INTEGER,
-    medicalInsuranceParentsLess60 INTEGER,
-    medicalInsuranceParentsGreater60 INTEGER,
-    deduction80DDBLess60 INTEGER,
-    deduction80DDBMore60 INTEGER,
-    deduction80UPartial INTEGER,
-    deduction80UMore40 INTEGER,
-    deductionInterestEducationLoan INTEGER
+    houseRent DECIMAL,
+    panNumber VARCHAR(12),
+    homeLoanInterest DECIMAL,
+    homeLoanPrincipal DECIMAL,
+    deduction80C DECIMAL,
+    nps DECIMAL,
+    medicalInsuranceSelf DECIMAL,
+    medicalInsuranceParentsLess60 DECIMAL,
+    medicalInsuranceParentsGreater60 DECIMAL,
+    deduction80DDBLess60 DECIMAL,
+    deduction80DDBMore60 DECIMAL,
+    deduction80UPartial DECIMAL,
+    deduction80UMore40 DECIMAL,
+    deductionInterestEducationLoan DECIMAL
   );
 `;
 
