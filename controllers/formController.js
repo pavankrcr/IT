@@ -50,27 +50,53 @@ const submitForm = async (req, res) => {
 
    await userModel.initializeDatabase();
     try {
-      await userModel.saveUser({
-      empid: id,
-      name,
-      email,
-      houseRent,
-      panNumber,
-      homeLoanInterest,
-      homeLoanPrincipal,
-      deduction80C,
-      nps,
-      medicalInsuranceSelf,
-      medicalInsuranceParentsLess60,
-      medicalInsuranceParentsGreater60,
-      deduction80DDBLess60,
-      deduction80DDBMore60,
-      deduction80UPartial,
-      deduction80UMore40,
-      deductionInterestEducationLoan,
-    },pdfBuffer);
-    console.log('User data and PDF saved successfully:');
-  }
+      const existingUser = await userModel.getUserById(id);
+
+      if (existingUser) {
+        // If user exists, update the existing record
+        await userModel.updateUserById(id, {
+          name,
+          email,
+          houseRent,
+          panNumber,
+          homeLoanInterest,
+          homeLoanPrincipal,
+          deduction80C,
+          nps,
+          medicalInsuranceSelf,
+          medicalInsuranceParentsLess60,
+          medicalInsuranceParentsGreater60,
+          deduction80DDBLess60,
+          deduction80DDBMore60,
+          deduction80UPartial,
+          deduction80UMore40,
+          deductionInterestEducationLoan,
+        }, pdfBuffer);
+        logger.info('User data and PDF updated successfully.');
+      } else {
+        // If user does not exist, insert a new record
+        await userModel.saveUser({
+          empid: id,
+          name,
+          email,
+          houseRent,
+          panNumber,
+          homeLoanInterest,
+          homeLoanPrincipal,
+          deduction80C,
+          nps,
+          medicalInsuranceSelf,
+          medicalInsuranceParentsLess60,
+          medicalInsuranceParentsGreater60,
+          deduction80DDBLess60,
+          deduction80DDBMore60,
+          deduction80UPartial,
+          deduction80UMore40,
+          deductionInterestEducationLoan,
+        }, pdfBuffer);
+        logger.info('User data and PDF saved successfully.');
+      }
+    }
   catch(e) {
     logger.error(e);
     res.send('Enter valid data');
