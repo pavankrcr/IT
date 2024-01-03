@@ -4,6 +4,7 @@ const formRoutes = require('./routes/formRoutes.js');
 const path = require('path');
 const ejs = require('ejs');
 const { port } = require('./config/config.js');
+require('dotenv').config();
 
 const app = express();
 
@@ -27,8 +28,8 @@ app.use((req, res, next) => {
 
 // Create HTTPS server
 const serverOptions = {
-  key: fs.readFileSync(sslKeyPath),
-  cert: fs.readFileSync(sslCertPath),
+  key: fs.readFileSync(SSL_KEY_PATH),
+  cert: fs.readFileSync(SSL_CERT_PATH),
 };
 
 const httpsServer = https.createServer(serverOptions, app);
