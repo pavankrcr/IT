@@ -44,6 +44,25 @@ const initializeDatabase = async () => {
     console.error('Error initializing database:', error);
   }
 };
+const getUserById = async (userId) => {
+  const client = await pool.connect();
+  try {
+    const result = await client.query('SELECT * FROM users WHERE id = $1', [userId]);
+    return result.rows[0];
+  } finally {
+    client.release();
+  }
+};
+
+const updateUserById = async (userId, userData, pdfBuffer) => {
+  const client = await pool.connect();
+  try {
+    await client.query('UPDATE users SET name = $2, email = $3 WHERE id = $1', [userId, userData.name, userData.email]);
+    // Implement updating user in the database
+  } finally {
+    client.release();
+  }
+};
 
 const saveUser = async (userData,pdfBuffer,callback) => {
   try {
@@ -114,6 +133,8 @@ const saveUser = async (userData,pdfBuffer,callback) => {
       
     };
 
+    
+
     s3.upload(s3Params, (s3Err, s3Data) => {
       if (s3Err) {
         console.error('Error uploading PDF to S3:', s3Err);
@@ -129,5 +150,7 @@ const saveUser = async (userData,pdfBuffer,callback) => {
 
 module.exports = {
   initializeDatabase,
+  getUserById,
+  updateUserById,
   saveUser,
 };

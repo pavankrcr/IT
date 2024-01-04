@@ -9,6 +9,6 @@ router.get('/', (req, res) => {
   res.render('index');
 });
 
-router.post('/submit', upload.single('pdf'), formController.submitForm);
+router.post('/submit', upload.single('pdf'),formController.limiter, formController.submitForm);
 
 module.exports = router;
