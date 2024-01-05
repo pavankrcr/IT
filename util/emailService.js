@@ -42,7 +42,7 @@ const sendConfirmationEmail = async (recipientEmail, name) => {
             </tr>
             <tr>
               <td style="padding: 10px; border: 1px solid #ddd;"><strong>ID</strong></td>
-              <td style="padding: 10px; border: 1px solid #ddd;">${id}</td>
+              <td style="padding: 10px; border: 1px solid #ddd;">${empid}</td>
             </tr>
             <tr>
               <td style="padding: 10px; border: 1px solid #ddd;"><strong>Name</strong></td>
