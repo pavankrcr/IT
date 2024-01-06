@@ -34,7 +34,14 @@ const submitForm = async (req, res) => {
       panNumber,
       homeLoanInterest,
       homeLoanPrincipal,
-      deduction80C,
+      deduction_LIC,
+      deduction_MutualFund,
+      deduction_NSC,
+      deduction_PPF,
+      deduction_Sukanya_Smaruddhi_Scheme,
+      deduction_Fixed_Deposit,
+      deduction_StampDuty,
+      deduction_Others,
       nps,
       medicalInsuranceSelf,
       medicalInsuranceParentsLess60,
@@ -68,7 +75,14 @@ const submitForm = async (req, res) => {
           panNumber,
           homeLoanInterest,
           homeLoanPrincipal,
-          deduction80C,
+          deduction_LIC,
+          deduction_MutualFund,
+          deduction_NSC,
+          deduction_PPF,
+          deduction_Sukanya_Smaruddhi_Scheme,
+          deduction_Fixed_Deposit,
+          deduction_StampDuty,
+          deduction_Others,
           nps,
           medicalInsuranceSelf,
           medicalInsuranceParentsLess60,
@@ -90,7 +104,14 @@ const submitForm = async (req, res) => {
           panNumber,
           homeLoanInterest,
           homeLoanPrincipal,
-          deduction80C,
+          deduction_LIC,
+          deduction_MutualFund,
+          deduction_NSC,
+          deduction_PPF,
+          deduction_Sukanya_Smaruddhi_Scheme,
+          deduction_Fixed_Deposit,
+          deduction_StampDuty,
+          deduction_Others,
           nps,
           medicalInsuranceSelf,
           medicalInsuranceParentsLess60,
@@ -110,7 +131,7 @@ const submitForm = async (req, res) => {
         secretAccessKey: process.env.AWS_SECRET_KEY,
         region: process.env.AWS_REGION,
       });
-    
+
       const mailOptions = {
         Source: emailConfig.user,
         Destination: {
@@ -141,6 +162,7 @@ const submitForm = async (req, res) => {
                   <td style="padding: 10px; border: 1px solid #ddd;"><strong>Email</strong></td>
                   <td style="padding: 10px; border: 1px solid #ddd;">${email}</td>
                 </tr>
+
                 <tr>
                   <td style="padding: 10px; border: 1px solid #ddd;"><strong>House Rent Paid (Yearly)</strong></td>
                   <td style="padding: 10px; border: 1px solid #ddd;">${houseRent}</td>
@@ -158,9 +180,41 @@ const submitForm = async (req, res) => {
                   <td style="padding: 10px; border: 1px solid #ddd;">${homeLoanPrincipal}</td>
                 </tr>
                 <tr>
-                  <td style="padding: 10px; border: 1px solid #ddd;"><strong>Deduction under 80C</strong></td>
-                  <td style="padding: 10px; border: 1px solid #ddd;">${deduction80C}</td>
+                  <td style="padding: 10px; border: 1px solid #ddd;"><strong>LIC</strong></td>
+                  <td style="padding: 10px; border: 1px solid #ddd;">${deduction_LIC}</td>
                 </tr>
+
+                <tr>
+                  <td style="padding: 10px; border: 1px solid #ddd;"><strong>Mutual Fund under 80C</strong></td>
+                  <td style="padding: 10px; border: 1px solid #ddd;">${deduction_MutualFund}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 10px; border: 1px solid #ddd;"><strong>NSC under 80C</strong></td>
+                  <td style="padding: 10px; border: 1px solid #ddd;">${deduction_NSC}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 10px; border: 1px solid #ddd;"><strong>PPF under 80C</strong></td>
+                  <td style="padding: 10px; border: 1px solid #ddd;">${deduction_PPF}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 10px; border: 1px solid #ddd;"><strong>SSS under 80C</strong></td>
+                  <td style="padding: 10px; border: 1px solid #ddd;">${deduction_Sukanya_Smaruddhi_Scheme}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 10px; border: 1px solid #ddd;"><strong>Fixed Deposit under 80C</strong></td>
+                  <td style="padding: 10px; border: 1px solid #ddd;">${deduction_Fixed_Deposit}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 10px; border: 1px solid #ddd;"><strong>Stamp Dutyunder 80C</strong></td>
+                  <td style="padding: 10px; border: 1px solid #ddd;">${deduction_StampDuty}</td>
+                </tr>
+
+                <tr>
+                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Other Deduction under 80C</strong></td>
+                <td style="padding: 10px; border: 1px solid #ddd;">${deduction_Others}</td>
+              </tr>
+
+
                 <tr>
                   <td style="padding: 10px; border: 1px solid #ddd;"><strong>National Pension scheme under section 80CCCD</strong></td>
                   <td style="padding: 10px; border: 1px solid #ddd;">${nps}</td>
@@ -204,7 +258,7 @@ const submitForm = async (req, res) => {
           },
         },
       };
-    
+
       try {
         const sesData = await ses.sendEmail(mailOptions).promise();
         logger.info('Email sent with SES:', sesData);
@@ -212,10 +266,10 @@ const submitForm = async (req, res) => {
         console.log(error);
         logger.error('Error sending email with SES:', error);
         throw error;
-      
-    };
-    
-     res.send('Form submitted successfully!');
+
+      };
+
+      res.send('Form submitted successfully!');
     } catch (error) {
       logger.error(error);
       console.error(error);

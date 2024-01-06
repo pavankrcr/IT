@@ -21,7 +21,14 @@ const createTableQuery = `
     panNumber VARCHAR(12),
     homeLoanInterest DECIMAL,
     homeLoanPrincipal DECIMAL,
-    deduction80C DECIMAL,
+    deduction_LIC DECIMAL,
+    deduction_MutualFund DECIMAL,
+    deduction_NSC DECIMAL,
+    deduction_PPF DECIMAL,
+    deduction_Sukanya_Smaruddhi_Scheme DECIMAL,
+    deduction_Fixed_Deposit DECIMAL,
+    deduction_StampDuty DECIMAL,
+    deduction_Others DECIMAL,
     nps DECIMAL,
     medicalInsuranceSelf DECIMAL,
     medicalInsuranceParentsLess60 DECIMAL,
@@ -57,14 +64,100 @@ const getUserById = async (userId) => {
 const updateUserById = async (userId, userData, pdfBuffer) => {
   const client = await pool.connect();
   try {
-    await client.query('UPDATE users SET name = $2, email = $3 WHERE id = $1', [userId, userData.name, userData.email]);
-    // Implement updating user in the database
+    const {
+      empid,
+      name,
+      email,
+      houseRent,
+      panNumber,
+      homeLoanInterest,
+      homeLoanPrincipal,
+      deduction_LIC,
+      deduction_MutualFund,
+      deduction_NSC,
+      deduction_PPF,
+      deduction_Sukanya_Smaruddhi_Scheme,
+      deduction_Fixed_Deposit,
+      deduction_StampDuty,
+      deduction_Others,
+      nps,
+      medicalInsuranceSelf,
+      medicalInsuranceParentsLess60,
+      medicalInsuranceParentsGreater60,
+      deduction80DDBLess60,
+      deduction80DDBMore60,
+      deduction80UPartial,
+      deduction80UMore40,
+      deductionInterestEducationLoan,
+    } = userData;
+
+    const updateQuery = `
+      UPDATE users 
+      SET 
+        empid = $2,
+        name = $3,
+        email = $4,
+        houseRent = $5,
+        panNumber = $6,
+        homeLoanInterest = $7,
+        homeLoanPrincipal = $8,
+        deduction_LIC = $9,
+        deduction_MutualFund = $10,
+        deduction_NSC = $11,
+        deduction_PPF = $12,
+        deduction_Sukanya_Smaruddhi_Scheme = $13,
+        deduction_Fixed_Deposit = $14,
+        deduction_StampDuty = $15,
+        deduction_Others = $16,
+        nps = $17,
+        medicalInsuranceSelf = $18,
+        medicalInsuranceParentsLess60 = $19,
+        medicalInsuranceParentsGreater60 = $20,
+        deduction80DDBLess60 = $21,
+        deduction80DDBMore60 = $22,
+        deduction80UPartial = $23,
+        deduction80UMore40 = $24,
+        deductionInterestEducationLoan = $25
+      WHERE 
+        id = $1
+    `;
+
+    const updateValues = [
+      userId,
+      empid,
+      name,
+      email,
+      houseRent,
+      panNumber,
+      homeLoanInterest,
+      homeLoanPrincipal,
+      deduction_LIC,
+      deduction_MutualFund,
+      deduction_NSC,
+      deduction_PPF,
+      deduction_Sukanya_Smaruddhi_Scheme,
+      deduction_Fixed_Deposit,
+      deduction_StampDuty,
+      deduction_Others,
+      nps,
+      medicalInsuranceSelf,
+      medicalInsuranceParentsLess60,
+      medicalInsuranceParentsGreater60,
+      deduction80DDBLess60,
+      deduction80DDBMore60,
+      deduction80UPartial,
+      deduction80UMore40,
+      deductionInterestEducationLoan,
+    ];
+
+    await client.query(updateQuery, updateValues);    // Implement updating user in the database
   } finally {
     client.release();
   }
+
 };
 
-const saveUser = async (userData,pdfBuffer,callback) => {
+const saveUser = async (userData, pdfBuffer, callback) => {
   try {
     const {
       empid,
@@ -74,7 +167,14 @@ const saveUser = async (userData,pdfBuffer,callback) => {
       panNumber,
       homeLoanInterest,
       homeLoanPrincipal,
-      deduction80C,
+      deduction_LIC,
+      deduction_MutualFund,
+      deduction_NSC,
+      deduction_PPF,
+      deduction_Sukanya_Smaruddhi_Scheme,
+      deduction_Fixed_Deposit,
+      deduction_StampDuty,
+      deduction_Others,
       nps,
       medicalInsuranceSelf,
       medicalInsuranceParentsLess60,
@@ -88,9 +188,9 @@ const saveUser = async (userData,pdfBuffer,callback) => {
 
     const insertQuery = `
       INSERT INTO users 
-        (empid, name, email, houseRent, panNumber, homeLoanInterest, homeLoanPrincipal, deduction80C, nps, medicalInsuranceSelf, medicalInsuranceParentsLess60, medicalInsuranceParentsGreater60, deduction80DDBLess60, deduction80DDBMore60, deduction80UPartial, deduction80UMore40, deductionInterestEducationLoan) 
+        (empid, name, email,houseRent, panNumber, homeLoanInterest, homeLoanPrincipal, deduction_LIC,deduction_MutualFund,deduction_NSC,deduction_PPF,deduction_Sukanya_Smaruddhi_Scheme,deduction_Fixed_Deposit, deduction_StampDuty,deduction_Others, nps, medicalInsuranceSelf, medicalInsuranceParentsLess60, medicalInsuranceParentsGreater60, deduction80DDBLess60, deduction80DDBMore60, deduction80UPartial, deduction80UMore40, deductionInterestEducationLoan) 
       VALUES 
-        ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
+        ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23,$24)
     `;
 
     const insertValues = [
@@ -101,7 +201,14 @@ const saveUser = async (userData,pdfBuffer,callback) => {
       panNumber,
       homeLoanInterest,
       homeLoanPrincipal,
-      deduction80C,
+      deduction_LIC,
+      deduction_MutualFund,
+      deduction_NSC,
+      deduction_PPF,
+      deduction_Sukanya_Smaruddhi_Scheme,
+      deduction_Fixed_Deposit,
+      deduction_StampDuty,
+      deduction_Others,
       nps,
       medicalInsuranceSelf,
       medicalInsuranceParentsLess60,
@@ -117,35 +224,35 @@ const saveUser = async (userData,pdfBuffer,callback) => {
     await client.query(insertQuery, insertValues);
     console.log('User data inserted into PostgreSQL');
     client.release();
-  
-  
+
+
   } catch (error) {
     console.error('Error inserting user data into PostgreSQL:', error);
     throw new Error('Failed to insert user data');
   }
-  
-    // Save PDF to Amazon S3
-    const s3Params = {
-      Bucket: process.env.AWS_BUCKET_NAME,
-      Key: `uploads/${userData.empid}.pdf`,
-      Body: pdfBuffer,
-      ContentType: 'application/pdf',
-      
-    };
 
-    
+  // Save PDF to Amazon S3
+  const s3Params = {
+    Bucket: process.env.AWS_BUCKET_NAME,
+    Key: `uploads/${userData.empid}.pdf`,
+    Body: pdfBuffer,
+    ContentType: 'application/pdf',
 
-    s3.upload(s3Params, (s3Err, s3Data) => {
-      if (s3Err) {
-        console.error('Error uploading PDF to S3:', s3Err);
-        if(callback)
+  };
+
+
+
+  s3.upload(s3Params, (s3Err, s3Data) => {
+    if (s3Err) {
+      console.error('Error uploading PDF to S3:', s3Err);
+      if (callback)
         callback(s3Err);
-      } else {
-        console.log('PDF uploaded to S3:');
-        if(callback)
+    } else {
+      console.log('PDF uploaded to S3:');
+      if (callback)
         callback(null, result);
-      }
-    });
+    }
+  });
 };
 
 module.exports = {

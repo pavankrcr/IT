@@ -32,6 +32,16 @@ body {
     box-sizing: border-box;
   }
   
+  .inline-radio {
+    display: flex;
+    align-items: center;
+  }
+
+  .inline-radio input {
+    margin-right: 5px;
+  }
+
+  
   button {
     background-color: #4caf50;
     color: #fff;
