@@ -65,7 +65,7 @@ const updateUserById = async (userId, userData, pdfBuffer) => {
   const client = await pool.connect();
   try {
     const {
-      empid,
+      id:userId,
       name,
       email,
       houseRent,
