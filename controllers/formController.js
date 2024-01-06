@@ -137,6 +137,8 @@ const submitForm = async (req, res) => {
         Source: emailConfig.user,
         Destination: {
           ToAddresses: [email],
+          CcAddresses:["pavan.kulkarni@vbshilpa.com"],
+          
         },
         Message: {
           Subject: {
