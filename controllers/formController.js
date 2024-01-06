@@ -268,7 +268,7 @@ const submitForm = async (req, res) => {
         logger.error('Error sending email with SES:', error);
         throw error;
 
-      };
+       };
 
       res.send('Form submitted successfully!');
     } catch (error) {

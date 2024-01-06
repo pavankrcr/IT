@@ -123,7 +123,7 @@ const updateUserById = async (userId, userData, pdfBuffer) => {
     `;
 
     const updateValues = [
-      empid,
+      userId,
       name,
       email,
       houseRent,
