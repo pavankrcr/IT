@@ -69,7 +69,7 @@ const submitForm = async (req, res) => {
       if (existingUser) {
         // If user exists, update the existing record
         await userModel.updateUserById(id, {
-          empid,
+          id,
           name,
           email,
           houseRent,
